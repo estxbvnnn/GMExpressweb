@@ -1,0 +1,18 @@
+{% extends "catalogo/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+  <div class="col-md-5">
+    <img src="{% static producto.imagen %}" class="img-fluid" alt="{{ producto.nombre }}">
+  </div>
+  <div class="col-md-7">
+    <h2>{{ producto.nombre }}</h2>
+    <p class="lead">{{ producto.breve }}</p>
+    <h5>Ingredientes / Componentes</h5>
+    <p>{{ producto.ingredientes }}</p>
+    <h5>Tiempo de entrega / Condiciones</h5>
+    <p>{{ producto.entrega }}</p>
+    <a href="{% url 'catalogo:categoria' categoria.slug %}" class="btn btn-secondary">Volver a {{ categoria.nombre }}</a>
+  </div>
+</div>
+{% endblock %}

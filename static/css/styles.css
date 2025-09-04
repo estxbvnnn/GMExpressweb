@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+:root{
+  --gm-dark: #064e49;  
+  --gm-mid:  #0ea69e;    
+  --gm-light:#7fe7dd;  
+  --text:#062626;
+  --muted:#5f7474;
+}
+
+html,body{
+  height:100%;
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color:var(--text);
+  background: linear-gradient(180deg,#f7faf9 0%, #eef7f6 100%);
+  margin:0;
+}
+
+.navbar.bg-gm{
+  background: linear-gradient(90deg, var(--gm-dark) 0%, var(--gm-mid) 100%);
+  box-shadow: 0 8px 22px rgba(6,78,73,0.14);
+}
+.navbar .nav-link{
+  color: rgba(255,255,255,0.92) !important;
+  font-weight:600;
+}
+.brand-logo{
+  height:64px;            
+  width:auto;
+  border-radius:8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.02);
+}
+.brand-text{
+  color: #fff;
+  font-weight:800;
+  letter-spacing:0.3px;
+  font-size:1.15rem;      
+}
+
+.container{
+  padding-top:1rem;
+  padding-bottom:1rem;
+}
+
+.card{
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15,82,87,0.06);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.card:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 14px 34px rgba(15,82,87,0.10);
+}
+.card-img-top{
+  height:180px;
+  object-fit:cover;
+}
+
+/* Imagenes de ficha */
+img.img-fluid{
+  max-height:420px;
+  width:100%;
+  object-fit:cover;
+  border-radius: 8px;
+  box-shadow: 0 8px 18px rgba(15,82,87,0.06);
+}
+
+/* Botones */
+.btn-primary{
+  background: var(--gm-dark);
+  border-color: var(--gm-dark);
+  box-shadow: 0 8px 20px rgba(25,143,134,0.12);
+}
+.btn-primary:hover, .btn-primary:focus{
+  background: var(--gm-mid);
+  border-color: var(--gm-mid);
+  color:#fff;
+}
+.btn-outline-primary{
+  border-color: var(--gm-mid);
+  color: var(--gm-dark);
+}
+.btn-outline-primary:hover{
+  background: rgba(25,143,134,0.06);
+}
+
+/* Footer */
+footer{
+  background: linear-gradient(180deg, #08393b 0%, #0b4748 100%);
+  color: rgba(255,255,255,0.9);
+}
+footer a { color: #bfece6; text-decoration:none; }
+
+/* Texto y utilidades */
+h1,h2,h3{ color: #083033; }
+.lead{ color: var(--muted); }
+
+@media (max-width:768px){
+  .brand-text{ display:none; }
+  .brand-logo{ height:48px; } /* tamaño moderado en móvil */
+  .card-img-top{ height:160px; }
+}

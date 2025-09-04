@@ -1,0 +1,26 @@
+{% extends "catalogo/base.html" %} {# Ruta correcta si base.html está en catalogo/templates/catalogo/base.html #}
+{% block content %}
+<h1>Acerca de {{ empresa.nombre }}</h1>
+
+<h4>Historia</h4>
+<p>{{ empresa.historia }}</p>
+
+<h4>Misión</h4>
+<p>{{ empresa.mision }}</p>
+
+<h4>Visión</h4>
+<p>{{ empresa.vision }}</p>
+
+<h4>Valores</h4>
+<ul>
+  {% for v in empresa.valores %}
+  <li>{{ v }}</li>
+  {% endfor %}
+</ul>
+
+<h4>Contactos</h4>
+<p>Teléfono: {{ empresa.contactos.telefono }}<br>Email: {{ empresa.contactos.email }}<br>Dirección: {{ empresa.contactos.direccion }}</p>
+
+<h4>Redes sociales</h4>
+<p><a href="{{ empresa.redes.facebook }}">Facebook</a> | <a href="{{ empresa.redes.instagram }}">Instagram</a></p>
+{% endblock %}

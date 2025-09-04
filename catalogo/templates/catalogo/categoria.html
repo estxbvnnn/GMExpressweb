@@ -1,0 +1,22 @@
+{% extends "catalogo/base.html" %}
+{% load static %}
+{% block content %}
+<h2>{{ categoria.nombre }}</h2>
+<p>{{ categoria.descripcion }}</p>
+
+<div class="row">
+  {% for p in categoria.productos %}
+  <div class="col-md-4 mb-3">
+    <div class="card h-100">
+      <img src="{% static p.imagen %}" class="card-img-top" alt="{{ p.nombre }}">
+      <div class="card-body">
+        <h5 class="card-title">{{ p.nombre }}</h5>
+        <p class="card-text">{{ p.breve }}</p>
+        <a href="{% url 'catalogo:producto' categoria.slug p.slug %}" class="btn btn-outline-primary">Ver ficha</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

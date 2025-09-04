@@ -1,0 +1,19 @@
+{% extends "catalogo/base.html" %}
+{% block content %}
+<h1>Catálogo de servicios y productos</h1>
+<p class="lead">Seleccione una categoría para ver los productos disponibles.</p>
+
+<div class="row">
+  {% for cat in categorias %}
+  <div class="col-md-4 mb-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">{{ cat.nombre }}</h5>
+        <p class="card-text">{{ cat.descripcion }}</p>
+        <a href="{% url 'catalogo:categoria' cat.slug %}" class="btn btn-primary">Ver productos</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
