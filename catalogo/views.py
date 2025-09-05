@@ -19,6 +19,9 @@ def producto(request, cat_slug, prod_slug):
     producto = next((p for p in categoria["productos"] if p["slug"] == prod_slug), None)
     if not producto:
         raise Http404("Producto no encontrado")
+    # Fallback: asegurar la ruta de la imagen para almuerzo-tradicional si no estuviera presente
+    if producto.get("slug") == "almuerzo-tradicional" and not producto.get("imagen"):
+        producto["imagen"] = "catalogo/almuerzotradicional.png"
     contexto = {"categoria": categoria, "producto": producto, "empresa": empresa_info()}
     return render(request, "catalogo/producto.html", contexto)
 
@@ -34,5 +37,9 @@ def empresa_info():
         "vision": "Ser referente en gestión alimentaria en colegios, universidades y eventos en Chile.",
         "valores": ["Calidad", "Responsabilidad", "Sostenibilidad", "Compromiso"],
         "contactos": {"telefono": "+56 9 0000 0000", "email": "contacto@gmexpress.cl", "direccion": "Santiago, Chile"},
-        "redes": {"facebook": "#", "instagram": "#", "twitter": "#"},
+        "redes": {
+            "facebook": "https://www.facebook.com/GMEXPRESSCL",
+            "instagram": "https://www.instagram.com/gmexpress_cl/?hl=es",
+            "twitter": "#"
+        },
     }

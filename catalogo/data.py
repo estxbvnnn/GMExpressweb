@@ -4,6 +4,7 @@ CATALOGOS = [
         "slug": "alimentacion-transportada",
         "nombre": "Alimentación transportada",
         "descripcion": "Comidas preparadas para entrega.",
+        "imagen": "img/alimentaciontransportada.png",  # cambiado a static/img/...
         "productos": [
             {
                 "slug": "almuerzo-tradicional",
@@ -11,7 +12,7 @@ CATALOGOS = [
                 "breve": "Plato de almuerzo clásico con proteína, guarnición y ensalada.",
                 "ingredientes": "Proteína (carne/pollo), arroz/papas, ensalada.",
                 "entrega": "Entrega en 24 horas hábiles; mantener refrigerado si corresponde.",
-                "imagen": "img/almuerzo_tradicional.jpg",
+                "imagen": "img/almuerzotradicional.png",  # cambiado a static/img/...
             },
             {
                 "slug": "almuerzo-vegetariano",
@@ -19,7 +20,7 @@ CATALOGOS = [
                 "breve": "Plato balanceado sin proteína animal.",
                 "ingredientes": "Legumbres, verduras asadas, quinoa.",
                 "entrega": "Entrega en 24 horas hábiles; apto para consumo inmediato.",
-                "imagen": "img/almuerzo_vegetariano.jpg",
+                "imagen": "img/vegetariano.png",  # cambiado a vegetariano.png
             },
             {
                 "slug": "almuerzo-vegano",
@@ -27,7 +28,7 @@ CATALOGOS = [
                 "breve": "Menú 100% vegetal.",
                 "ingredientes": "Tofu, verduras, cereales integrales.",
                 "entrega": "Entrega en 24 horas hábiles; verificar alérgenos.",
-                "imagen": "img/almuerzo_vegano.jpg",
+                "imagen": "img/vegetariano.png",  # actualizado a vegetariano.png
             },
             {
                 "slug": "almuerzo-hipocalorico",
@@ -35,7 +36,7 @@ CATALOGOS = [
                 "breve": "Opción baja en calorías para dietas.",
                 "ingredientes": "Pechuga de pollo a la plancha, ensalada, quinoa.",
                 "entrega": "Entrega en 24 horas; ideal para consumo inmediato.",
-                "imagen": "img/almuerzo_hipocalorico.jpg",
+                "imagen": "img/almuerzohipocalorico.png",  # cambiado a almuerzohipocalorico.png
             },
             {
                 "slug": "menu-especial-del-dia",
@@ -43,7 +44,7 @@ CATALOGOS = [
                 "breve": "Sorpresa del día preparada por nuestro chef.",
                 "ingredientes": "Varía diariamente; consultar al pedir.",
                 "entrega": "Entrega en 24 horas hábiles.",
-                "imagen": "img/menu_especial.jpg",
+                "imagen": "img/menuchef.png",  # cambiado a menuchef.png
             },
         ],
     },
@@ -52,11 +53,11 @@ CATALOGOS = [
         "nombre": "Servicio presencial en sucursales",
         "descripcion": "Atención y servicios presenciales en nuestras sucursales.",
         "productos": [
-            {"slug": "atencion-personalizada", "nombre": "Atención personalizada", "breve": "Asesoría y servicio al cliente en sucursal.", "ingredientes": "Personal capacitado.", "entrega": "Inmediato en horario de atención.", "imagen": "img/atencion_personalizada.jpg"},
-            {"slug": "retiro-pedidos", "nombre": "Retiro de pedidos", "breve": "Retira tus pedidos en sucursal.", "ingredientes": "Pedido preparado.", "entrega": "Según horario de sucursal.", "imagen": "img/retiro_pedidos.jpg"},
-            {"slug": "degustaciones", "nombre": "Degustaciones", "breve": "Pruebas de productos en tienda.", "ingredientes": "Muestras pequeñas.", "entrega": "Eventos programados.", "imagen": "img/degustaciones.jpg"},
-            {"slug": "asesoria-nutricional", "nombre": "Asesoría nutricional", "breve": "Consejos de alimentación por profesionales.", "ingredientes": "Personal especializado.", "entrega": "Reservar cita previa.", "imagen": "img/asesoria_nutricional.jpg"},
-            {"slug": "cobro-y-facturacion", "nombre": "Cobro y facturación", "breve": "Servicios administrativos en sucursal.", "ingredientes": "Soporte administrativo.", "entrega": "Inmediato.", "imagen": "img/cobro_facturacion.jpg"},
+            {"slug": "atencion-personalizada", "nombre": "Atención personalizada", "breve": "Asesoría y servicio al cliente en sucursal.", "ingredientes": "Personal capacitado.", "entrega": "Inmediato en horario de atención.", "imagen": "img/atencionpersonalizada.jpg"},
+            {"slug": "retiro-pedidos", "nombre": "Retiro de pedidos", "breve": "Retira tus pedidos en sucursal.", "ingredientes": "Pedido preparado.", "entrega": "Según horario de sucursal.", "imagen": "img/foto2delivery.png"},
+            {"slug": "degustaciones", "nombre": "Degustaciones", "breve": "Pruebas de productos en tienda.", "ingredientes": "Muestras pequeñas.", "entrega": "Eventos programados.", "imagen": "img/degustaciones.png"},
+            {"slug": "asesoria-nutricional", "nombre": "Asesoría nutricional", "breve": "Consejos de alimentación por profesionales.", "ingredientes": "Personal especializado.", "entrega": "Reservar cita previa.", "imagen": "img/asesorionutricional.png"},
+            {"slug": "cobro-y-facturacion", "nombre": "Cobro y facturación", "breve": "Servicios administrativos en sucursal.", "ingredientes": "Soporte administrativo.", "entrega": "Inmediato.", "imagen": "img/cobroyfacturacion.jpg"},
         ],
     },
     {
@@ -64,11 +65,11 @@ CATALOGOS = [
         "nombre": "Concesión de casinos (colegios/universidades)",
         "descripcion": "Servicios de alimentación para recintos educativos.",
         "productos": [
-            {"slug": "propuesta-menu-institucional", "nombre": "Propuesta de menú institucional", "breve": "Menús para periodos escolares.", "ingredientes": "Planificación por nutricionista.", "entrega": "Según contrato.", "imagen": "img/menu_institucional.jpg"},
-            {"slug": "gestion-operativa", "nombre": "Gestión operativa", "breve": "Operación completa del casino.", "ingredientes": "Personal y logística.", "entrega": "Según contrato.", "imagen": "img/gestion_operativa.jpg"},
-            {"slug": "control-calidad", "nombre": "Control de calidad", "breve": "Protocolos y supervisión.", "ingredientes": "Normas HACCP.", "entrega": "Continuo.", "imagen": "img/control_calidad.jpg"},
-            {"slug": "actividades-educativas", "nombre": "Actividades educativas", "breve": "Talleres y charlas de alimentación.", "ingredientes": "Material didáctico.", "entrega": "Programado.", "imagen": "img/actividades_educativas.jpg"},
-            {"slug": "suministro-ingredientes", "nombre": "Suministro de ingredientes", "breve": "Provisión de insumos alimentarios.", "ingredientes": "Proveedores certificados.", "entrega": "Según acuerdo.", "imagen": "img/suministro_ingredientes.jpg"},
+            {"slug": "propuesta-menu-institucional", "nombre": "Propuesta de menú institucional", "breve": "Menús para periodos escolares.", "ingredientes": "Planificación por nutricionista.", "entrega": "Según contrato.", "imagen": "img/propuesta.png"},
+            {"slug": "gestion-operativa", "nombre": "Gestión operativa", "breve": "Operación completa del casino.", "ingredientes": "Personal y logística.", "entrega": "Según contrato.", "imagen": "img/GestionOperativa.jpg"},
+            {"slug": "control-calidad", "nombre": "Control de calidad", "breve": "Protocolos y supervisión.", "ingredientes": "Normas HACCP.", "entrega": "Continuo.", "imagen": "img/controlcalidad.jpg"},
+            {"slug": "actividades-educativas", "nombre": "Actividades educativas", "breve": "Talleres y charlas de alimentación.", "ingredientes": "Material didáctico.", "entrega": "Programado.", "imagen": "img/actividades.jpg"},
+            {"slug": "suministro-ingredientes", "nombre": "Suministro de ingredientes", "breve": "Provisión de insumos alimentarios.", "ingredientes": "Proveedores certificados.", "entrega": "Según acuerdo.", "imagen": "img/ingredientes.jpg"},
         ],
     },
     {
@@ -76,11 +77,11 @@ CATALOGOS = [
         "nombre": "Coffee break y eventos",
         "descripcion": "Servicios para reuniones, eventos y coffee breaks.",
         "productos": [
-            {"slug": "sandwiches", "nombre": "Sándwiches", "breve": "Variedad de sándwiches fríos y calientes.", "ingredientes": "Pan, proteínas, vegetales.", "entrega": "En horario del evento.", "imagen": "img/sandwiches.jpg"},
-            {"slug": "jugos-naturales", "nombre": "Jugos naturales", "breve": "Jugo prensado al momento.", "ingredientes": "Frutas frescas.", "entrega": "Refrigerado; consumo inmediato.", "imagen": "img/jugos.jpg"},
-            {"slug": "reposteria-eventos", "nombre": "Repostería", "breve": "Kuchen, tartaletas y más.", "ingredientes": "Harinas, frutas, chocolates.", "entrega": "Según pedido.", "imagen": "img/reposteria_eventos.jpg"},
-            {"slug": "colaciones-dulces", "nombre": "Colaciones dulces", "breve": "Bocadillos dulces para eventos.", "ingredientes": "Galletas, brownies, etc.", "entrega": "En horario del evento.", "imagen": "img/colaciones_dulces.jpg"},
-            {"slug": "colaciones-saladas", "nombre": "Colaciones saladas", "breve": "Bocadillos salados variados.", "ingredientes": "Snacks, mini sándwiches.", "entrega": "En horario del evento.", "imagen": "img/colaciones_saladas.jpg"},
+            {"slug": "sandwiches", "nombre": "Sándwiches", "breve": "Variedad de sándwiches fríos y calientes.", "ingredientes": "Pan, proteínas, vegetales.", "entrega": "En horario del evento.", "imagen": "img/pan.webp"},
+            {"slug": "jugos-naturales", "nombre": "Jugos naturales", "breve": "Jugo prensado al momento.", "ingredientes": "Frutas frescas.", "entrega": "Refrigerado; consumo inmediato.", "imagen": "img/jugos.webp"},
+            {"slug": "reposteria-eventos", "nombre": "Repostería", "breve": "Kuchen, tartaletas y más.", "ingredientes": "Harinas, frutas, chocolates.", "entrega": "Según pedido.", "imagen": "img/reposteria.webp"},
+            {"slug": "colaciones-dulces", "nombre": "Colaciones dulces", "breve": "Bocadillos dulces para eventos.", "ingredientes": "Galletas, brownies, etc.", "entrega": "En horario del evento.", "imagen": "img/colaciones.jpg"},
+            {"slug": "colaciones-saladas", "nombre": "Colaciones saladas", "breve": "Bocadillos salados variados.", "ingredientes": "Snacks, mini sándwiches.", "entrega": "En horario del evento.", "imagen": "img/saladas.jpg"},
         ],
     },
     {
@@ -88,8 +89,8 @@ CATALOGOS = [
         "nombre": "Repostería y snack con tickets",
         "descripcion": "Bollería y snacks gestionados con tickets.",
         "productos": [
-            {"slug": "queques", "nombre": "Queques", "breve": "Queques caseros variados.", "ingredientes": "Harina, huevos, mantequilla.", "entrega": "Frescos cada mañana.", "imagen": "img/queques.jpg"},
-            {"slug": "tortas", "nombre": "Tortas", "breve": "Tortas para celebraciones.", "ingredientes": "Bizcocho, crema, decoración.", "entrega": "Reservar con anticipación.", "imagen": "img/tortas.jpg"},
+            {"slug": "queques", "nombre": "Queques", "breve": "Queques caseros variados.", "ingredientes": "Harina, huevos, mantequilla.", "entrega": "Frescos cada mañana.", "imagen": "img/queque.jpg"},
+            {"slug": "tortas", "nombre": "Tortas", "breve": "Tortas para celebraciones.", "ingredientes": "Bizcocho, crema, decoración.", "entrega": "Reservar con anticipación.", "imagen": "img/tortas.webp"},
             {"slug": "galletas", "nombre": "Galletas", "breve": "Galletas artesanales.", "ingredientes": "Harina, mantequilla, azúcar.", "entrega": "Disponibles diariamente.", "imagen": "img/galletas.jpg"},
             {"slug": "brownies", "nombre": "Brownies", "breve": "Brownies chocolatosos.", "ingredientes": "Chocolate, harina, huevos.", "entrega": "Frescos cada día.", "imagen": "img/brownies.jpg"},
             {"slug": "muffins", "nombre": "Muffins", "breve": "Muffins variados.", "ingredientes": "Harina, frutas/granola.", "entrega": "Disponibles en tienda.", "imagen": "img/muffins.jpg"},
