@@ -3,7 +3,7 @@ from .data import CATALOGOS
 
 def index(request):
     contexto = {"categorias": CATALOGOS, "empresa": empresa_info()}
-    return render(request, "catalogo/index.html", contexto)
+    return render(request, "index.html", contexto)
 
 def categoria(request, slug):
     categoria = next((c for c in CATALOGOS if c["slug"] == slug), None)
@@ -36,7 +36,7 @@ def empresa_info():
         "mision": "Entregar alimentos saludables y servicios profesionales que faciliten la alimentación institucional y de eventos.",
         "vision": "Ser referente en gestión alimentaria en colegios, universidades y eventos en Chile.",
         "valores": ["Calidad", "Responsabilidad", "Sostenibilidad", "Compromiso"],
-        "contactos": {"telefono": "+56 9 0000 0000", "email": "contacto@gmexpress.cl", "direccion": "Santiago, Chile"},
+        "contactos": {"telefono": "+56 9 7615 9518", "email": "ventas@gmexpress.cl", "direccion": "Gerónimo Méndez 1851, Barrio Industrial, Coquimbo"},
         "redes": {
             "facebook": "https://www.facebook.com/GMEXPRESSCL",
             "instagram": "https://www.instagram.com/gmexpress_cl/?hl=es",

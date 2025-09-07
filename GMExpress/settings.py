@@ -34,7 +34,8 @@ ROOT_URLCONF = "GMExpress.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "catalogo", "templates")],
+        # Usar la carpeta de plantillas en la raíz del proyecto
+        "DIRS": [str(BASE_DIR / "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
