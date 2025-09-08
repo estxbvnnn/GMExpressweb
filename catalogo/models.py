@@ -1,4 +1,3 @@
-# Datos de catálogo: categorías -> productos -> detalle
 CATALOGOS = [
     {
         "slug": "alimentacion-transportada",
