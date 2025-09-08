@@ -3,7 +3,7 @@ CATALOGOS = [
         "slug": "alimentacion-transportada",
         "nombre": "Alimentación transportada",
         "descripcion": "Comidas preparadas para entrega.",
-        "imagen": "img/alimentaciontransportada.png",  # cambiado a static/img/...
+        "imagen": "img/alimentaciontransportada.png",  
         "productos": [
             {
                 "slug": "almuerzo-tradicional",
@@ -11,7 +11,7 @@ CATALOGOS = [
                 "breve": "Plato de almuerzo clásico con proteína, guarnición y ensalada.",
                 "ingredientes": "Proteína (carne/pollo), arroz/papas, ensalada.",
                 "entrega": "Entrega en 24 horas hábiles; mantener refrigerado si corresponde.",
-                "imagen": "img/almuerzotradicional.png",  # cambiado a static/img/...
+                "imagen": "img/almuerzotradicional.png",  
             },
             {
                 "slug": "almuerzo-vegetariano",
@@ -19,7 +19,7 @@ CATALOGOS = [
                 "breve": "Plato balanceado sin proteína animal.",
                 "ingredientes": "Legumbres, verduras asadas, quinoa.",
                 "entrega": "Entrega en 24 horas hábiles; apto para consumo inmediato.",
-                "imagen": "img/vegetariano.png",  # cambiado a vegetariano.png
+                "imagen": "img/vegetariano.png",  
             },
             {
                 "slug": "almuerzo-vegano",
@@ -27,7 +27,7 @@ CATALOGOS = [
                 "breve": "Menú 100% vegetal.",
                 "ingredientes": "Tofu, verduras, cereales integrales.",
                 "entrega": "Entrega en 24 horas hábiles; verificar alérgenos.",
-                "imagen": "img/vegetariano.png",  # actualizado a vegetariano.png
+                "imagen": "img/vegetariano.png",
             },
             {
                 "slug": "almuerzo-hipocalorico",
@@ -35,7 +35,7 @@ CATALOGOS = [
                 "breve": "Opción baja en calorías para dietas.",
                 "ingredientes": "Pechuga de pollo a la plancha, ensalada, quinoa.",
                 "entrega": "Entrega en 24 horas; ideal para consumo inmediato.",
-                "imagen": "img/almuerzohipocalorico.png",  # cambiado a almuerzohipocalorico.png
+                "imagen": "img/almuerzohipocalorico.png",
             },
             {
                 "slug": "menu-especial-del-dia",
