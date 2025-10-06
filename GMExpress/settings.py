@@ -16,6 +16,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "catalogo",
+    "servicios.apps.ServiciosConfig",
+    "productos.apps.ProductosConfig",
 ]
 
 MIDDLEWARE = [
@@ -51,8 +53,13 @@ WSGI_APPLICATION = "GMExpress.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": str(BASE_DIR / "db.sqlite3"),
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "gmexpress",
+        "USER": "user_gm",
+        "PASSWORD": "gmexpress",
+        "HOST": "localhost",
+        "PORT": "3306",
+        "OPTIONS": {"init_command": "SET sql_mode='STRICT_TRANS_TABLES'"},
     }
 }
 

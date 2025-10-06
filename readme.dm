@@ -1,7 +1,7 @@
 Instrucciones rápidas para ejecutar GMExpressweb
 
 - Instalar Django 
-  pip install django
+  pip install "django==4.2.*"
 
 - Migraciones y datos
   python manage.py migrate
