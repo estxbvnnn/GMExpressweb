@@ -3,7 +3,6 @@ GMExpressweb - Resumen
 Proyecto Django para gestión de catálogo, productos/servicios y citas.
 
 Instalación rápida
-- Crear/activar virtualenv
 - pip install -r requirements.txt
 - python manage.py migrate
 - python manage.py createtestuser
