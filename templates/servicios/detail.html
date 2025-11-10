@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-md-5">
+    <div class="card">
+      <div class="card-body text-center">
+        <h4 class="mb-1">{{ servicio.nombre }}</h4>
+        <p class="small text-muted mb-0">{{ servicio.tipo.nombre }}</p>
+        <p class="mt-3"><strong>${{ servicio.precio }}</strong></p>
+        <p class="small text-muted">Estado: {{ servicio.get_estado_display }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-7">
+    <div class="card">
+      <div class="card-body">
+        <h3>{{ servicio.nombre }}</h3>
+        <hr>
+        <p>{{ servicio.descripcion|linebreaks }}</p>
+
+        <div class="mt-3 d-flex gap-2">
+          <a class="btn btn-outline-primary" href="{% url 'servicios:list' %}">Volver a servicios</a>
+
+          {% if user.is_staff %}
+            <a class="btn btn-secondary" href="{% url 'servicios:update' servicio.pk %}">Editar</a>
+
+            <form method="post" action="{% url 'servicios:delete' servicio.pk %}" class="d-inline">
+              {% csrf_token %}
+              <button class="btn btn-danger" type="submit">Eliminar</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

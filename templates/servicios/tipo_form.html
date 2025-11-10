@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="mb-3">{{ action }}</h4>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            {{ form.nombre }}
+            {{ form.nombre.errors }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            {{ form.descripcion }}
+            {{ form.descripcion.errors }}
+          </div>
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" type="submit">{{ action }}</button>
+            <a href="{% url 'servicios:tipo_list' %}" class="btn btn-outline-secondary ms-2">Volver</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

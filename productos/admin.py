@@ -11,3 +11,5 @@ class ProductoAdmin(admin.ModelAdmin):
     list_display = ("nombre", "categoria", "precio", "stock", "unidad_medida")
     list_filter = ("categoria", "unidad_medida")
     search_fields = ("nombre", "descripcion")
+    list_display_links = ("nombre",)
+    ordering = ("categoria", "nombre")

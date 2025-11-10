@@ -16,8 +16,8 @@ urlpatterns = [
 
     # usar LoginView integrado con formulario personalizado para añadir clases/widgets
     path("login/", auth_views.LoginView.as_view(template_name="login.html", authentication_form=LoginForm), name="login"),
-    # usar LogoutView integrado
-    path("logout/", auth_views.LogoutView.as_view(next_page=reverse_lazy("catalogo:index")), name="logout"),
+    # usar la vista de logout definida en catalogo.views (acepta GET/POST y redirige)
+    path("logout/", views.logout_view, name="logout"),
 
     path("perfil/", views.profile, name="profile"),
 

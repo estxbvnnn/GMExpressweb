@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Appointment
 from .forms import AppointmentForm
 from django.contrib import messages
@@ -81,3 +81,31 @@ def appointment_delete(request, pk):
 def appointment_detail(request, pk):
     ap = get_object_or_404(Appointment, pk=pk, user=request.user)
     return render(request, "citas/detail.html", {"appointment": ap})
+
+# Dashboard de gestión (solo staff)
+staff_required = user_passes_test(lambda u: u.is_active and u.is_staff)
+
+@staff_required
+def appointment_manage(request):
+    qs = Appointment.objects.order_by("-scheduled_at")
+    return render(request, "citas/manage.html", {"appointments": qs})
+
+@staff_required
+def appointment_manage_action(request, pk):
+    ap = get_object_or_404(Appointment, pk=pk)
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "confirm":
+            ap.status = "confirmed"
+            ap.save()
+            messages.success(request, "Cita marcada como Confirmada.")
+        elif action == "cancel":
+            ap.status = "cancelled"
+            ap.save()
+            messages.success(request, "Cita marcada como Cancelada.")
+        elif action == "delete":
+            ap.delete()
+            messages.success(request, "Cita eliminada.")
+        else:
+            messages.error(request, "Acción desconocida.")
+    return redirect("citas:manage")

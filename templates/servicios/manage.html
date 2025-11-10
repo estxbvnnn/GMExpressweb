@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2>Gestión de Servicios</h2>
+    <p class="text-muted">Interfaz de gestión (no Django admin). Crear y administrar tipos y servicios.</p>
+  </div>
+  <div>
+    <a class="btn btn-outline-primary me-2" href="{% url 'servicios:tipo_list' %}">Ver Tipos ({{ tipos }})</a>
+    <a class="btn btn-primary" href="{% url 'servicios:create' %}">Crear servicio</a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-12">
+    <div class="card p-3">
+      <h5 class="mb-3">Servicios recientes</h5>
+      <div class="row g-2">
+        {% for s in recientes %}
+        <div class="col-md-4">
+          <div class="d-flex align-items-center gap-3">
+            <div>
+              <strong>{{ s.nombre }}</strong><br>
+              <small class="text-muted">{{ s.tipo.nombre }}</small>
+            </div>
+            <div class="ms-auto">
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'servicios:detail' s.pk %}">Ver</a>
+              <a class="btn btn-sm btn-secondary" href="{% url 'servicios:update' s.pk %}">Editar</a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12"><em>No hay servicios recientes.</em></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

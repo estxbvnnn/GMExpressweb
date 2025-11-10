@@ -8,6 +8,8 @@ class TipoServicioAdmin(admin.ModelAdmin):
 
 @admin.register(Servicio)
 class ServicioAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "tipo", "precio", "estado", "activo")
-    list_filter = ("tipo", "estado", "activo")
+    list_display = ("nombre", "tipo", "precio", "estado")
+    list_filter = ("tipo", "estado")
     search_fields = ("nombre", "descripcion")
+    list_display_links = ("nombre",)
+    ordering = ("-tipo", "nombre")

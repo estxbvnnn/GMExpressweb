@@ -1,4 +1,5 @@
 from django.shortcuts import render, Http404, redirect
+from django.urls import reverse
 from .models import CATALOGOS
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -98,7 +99,9 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("catalogo:index")
+    # redirige a la URL absoluta usando el host de la petición (evita redirigir a localhost)
+    absolute_index = request.build_absolute_uri(reverse("catalogo:index"))
+    return redirect(absolute_index)
 
 @login_required
 def profile(request):

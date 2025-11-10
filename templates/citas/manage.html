@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2>Gestión de Citas (Staff)</h2>
+    <p class="text-muted">Ver y administrar citas desde la interfaz web (solo usuarios staff).</p>
+  </div>
+</div>
+
+<div class="row g-3">
+  {% for ap in appointments %}
+  <div class="col-md-6">
+    <div class="card p-3">
+      <div class="d-flex">
+        <div>
+          <strong>{{ ap.subject }}</strong><br>
+          <small class="text-muted">{{ ap.user.get_full_name|default:ap.user.username }} — {{ ap.scheduled_at|date:"d M Y H:i" }}</small>
+        </div>
+        <div class="ms-auto">
+          <form method="post" action="{% url 'citas:manage_action' ap.pk %}">
+            {% csrf_token %}
+            <button name="action" value="confirm" class="btn btn-sm btn-outline-success">Confirmar</button>
+            <button name="action" value="cancel" class="btn btn-sm btn-outline-secondary">Cancelar</button>
+            <button name="action" value="delete" class="btn btn-sm btn-danger">Eliminar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12"><p>No hay citas registradas.</p></div>
+  {% endfor %}
+</div>
+{% endblock %}

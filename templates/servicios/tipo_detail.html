@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <h3>{{ tipo.nombre }}</h3>
+        <p class="text-muted mb-3">{{ tipo.descripcion }}</p>
+
+        <div class="d-flex justify-content-end">
+          <a class="btn btn-outline-primary" href="{% url 'servicios:tipo_list' %}">Volver</a>
+          {% if user.is_staff or user.is_superuser %}
+            <a class="btn btn-secondary ms-2" href="{% url 'servicios:tipo_update' tipo.pk %}">Editar</a>
+            <form method="post" action="{% url 'servicios:tipo_delete' tipo.pk %}" class="d-inline ms-2">
+              {% csrf_token %}
+              <button class="btn btn-danger" type="submit">Eliminar</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

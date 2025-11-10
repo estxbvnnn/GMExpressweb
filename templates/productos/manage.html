@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2>Gestión de Productos</h2>
+    <p class="text-muted">Interfaz de gestión (no Django admin). Crea, edita y elimina productos y categorías desde aquí.</p>
+  </div>
+  <div>
+    <a class="btn btn-outline-primary me-2" href="{% url 'productos:categoria_list' %}">Ver Categorías ({{ categorias }})</a>
+    <a class="btn btn-primary" href="{% url 'productos:create' %}">Crear producto</a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-12">
+    <div class="card p-3 mb-3">
+      <h5 class="mb-3">Productos recientes</h5>
+      <div class="row g-2">
+        {% for p in recientes %}
+        <div class="col-md-4">
+          <div class="d-flex align-items-center gap-3">
+            <div>
+              <strong>{{ p.nombre }}</strong><br>
+              <small class="text-muted">{{ p.categoria.nombre }}</small>
+            </div>
+            <div class="ms-auto">
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'productos:detail' p.pk %}">Ver</a>
+              <a class="btn btn-sm btn-secondary" href="{% url 'productos:update' p.pk %}">Editar</a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12"><em>No hay productos recientes.</em></div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card p-3">
+      <h5 class="mb-3">Todos los productos</h5>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th><th class="text-end">Acciones</th></tr>
+          </thead>
+          <tbody>
+            {% for p in all_products %}
+            <tr>
+              <td>{{ p.nombre }}</td>
+              <td>{{ p.categoria.nombre }}</td>
+              <td>${{ p.precio }}</td>
+              <td>{{ p.stock }}</td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'productos:detail' p.pk %}">Ver</a>
+                <a class="btn btn-sm btn-secondary" href="{% url 'productos:update' p.pk %}">Editar</a>
+                <form method="post" action="{% url 'productos:delete' p.pk %}" class="d-inline">
+                  {% csrf_token %}
+                  <button class="btn btn-sm btn-danger" type="submit">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No hay productos registrados.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

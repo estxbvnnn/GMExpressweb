@@ -10,24 +10,172 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-      /* Topbar / navbar professional tweaks */
-      .bg-gm { background: linear-gradient(90deg,#0b4b6f,#0e6a8a); border-bottom: 4px solid rgba(0,0,0,0.06); }
+      /* Reemplazo/actualización de estilos: botones, inputs, cards y utilidades */
+      :root{
+        --gm-primary-1: #0b4b6f;
+        --gm-primary-2: #0e6a8a;
+        --gm-accent: #ffb703;
+        --gm-radius: 12px;
+        --gm-soft-shadow: 0 6px 20px rgba(12,40,60,0.08);
+      }
+
+      /* Topbar / navbar professional tweaks (mantener existente) */
+      .bg-gm { background: linear-gradient(90deg,var(--gm-primary-1),var(--gm-primary-2)); border-bottom: 4px solid rgba(0,0,0,0.06); }
       .navbar .nav-link { color: rgba(255,255,255,0.95); font-weight:500; padding:0.6rem 0.9rem; }
       .navbar .nav-link:hover { color: #fff; background: rgba(255,255,255,0.03); border-radius:6px; }
       .brand-logo { height:44px; width:auto; display:block; }
       .navbar { box-shadow: 0 2px 8px rgba(12,40,60,0.06); }
-      /* compact look on small screens */
-      @media (max-width: 991px) {
-        .brand-logo { height:38px; }
+
+      /* Botones: look moderno, con gradiente, sombra y animación */
+      .btn {
+        border-radius: 10px;
+        transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+        box-shadow: 0 4px 12px rgba(10,30,45,0.06);
+        font-weight:600;
       }
+      .btn:active{ transform: translateY(1px); }
+      .btn:focus{ box-shadow: 0 6px 18px rgba(14,106,138,0.18); outline: none; }
+
+      .btn-primary {
+        color: #fff;
+        background-image: linear-gradient(180deg,var(--gm-primary-2),var(--gm-primary-1));
+        border: none;
+      }
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(14,106,138,0.15);
+        opacity: 0.98;
+      }
+
+      .btn-outline-primary {
+        color: var(--gm-primary-2);
+        background: transparent;
+        border: 1px solid rgba(14,106,138,0.15);
+        box-shadow: none;
+      }
+      .btn-outline-primary:hover {
+        background: linear-gradient(180deg, rgba(14,106,138,0.06), rgba(14,106,138,0.03));
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(180deg,#f7f7f7,#efefef);
+        color: #111;
+        border: 1px solid rgba(0,0,0,0.04);
+      }
+      .btn-danger {
+        background: linear-gradient(180deg,#e04b4b,#c93b3b);
+        color:#fff;
+        border:none;
+      }
+
+      /* Tamaños y estilos rápidos */
+      .btn-lg { padding: .72rem 1.1rem; border-radius: 14px; font-size:1.05rem; }
+      .btn-sm { padding: .32rem .6rem; font-size:.85rem; border-radius:8px; }
+      .btn-rounded { border-radius: 999px; padding-left:1.1rem; padding-right:1.1rem; }
+
+      /* Botones con icono: separar icono del texto */
+      .btn .btn-icon { display:inline-flex; align-items:center; margin-right:.5rem; }
+
+      /* Formularios: inputs más limpios y consistentes */
+      .form-control {
+        border-radius: 10px;
+        border: 1px solid rgba(16,24,32,0.08);
+        box-shadow: none;
+        transition: box-shadow .12s ease, border-color .12s ease;
+      }
+      .form-control:focus {
+        border-color: var(--gm-primary-2);
+        box-shadow: 0 6px 18px rgba(14,106,138,0.06);
+      }
+      .card { border-radius: var(--gm-radius); box-shadow: var(--gm-soft-shadow); }
+
+      /* Badges y estados más pulidos */
+      .badge { font-weight:600; border-radius:8px; padding:.45em .6em; }
+      .badge.bg-info.text-dark { background: linear-gradient(180deg,#d6f3ff,#bfefff); color:#06313f; }
+
+      /* Ajustes para listas y tarjetas de citas (mejor legibilidad) */
+      .card .card-body h5 { font-weight:700; margin-bottom:.25rem; }
+      .text-truncate { max-width: 100%; }
+
+      /* Pequeños tweaks responsivos */
+      @media (max-width: 767px) {
+        .btn-lg { font-size: .95rem; padding: .6rem .9rem; }
+        .brand-logo { height:36px; }
+      }
+
+      /* Botones outline-secondary / light / link / success faltantes */
+      .btn-outline-secondary {
+        color: var(--gm-primary-2);
+        background: linear-gradient(180deg,#ffffff,#f7f9fb);
+        border: 1px solid rgba(14,106,138,0.12);
+        box-shadow: none;
+      }
+      .btn-outline-secondary:hover {
+        background: linear-gradient(180deg, rgba(14,106,138,0.06), rgba(14,106,138,0.03));
+        transform: translateY(-2px);
+      }
+
+      .btn-light {
+        background: #fff;
+        color: #111;
+        border: 1px solid rgba(0,0,0,0.06);
+      }
+
+      .btn-outline-success {
+        color: #116644;
+        background: transparent;
+        border: 1px solid rgba(17,102,68,0.12);
+      }
+      .btn-success {
+        background: linear-gradient(180deg,#28b463,#20a34f);
+        color: #fff;
+        border: none;
+      }
+
+      .btn-link {
+        background: transparent;
+        color: var(--gm-primary-2);
+        padding: .25rem .5rem;
+        border: none;
+        box-shadow: none;
+        text-decoration: underline;
+      }
+      .btn-link:hover {
+        background: rgba(14,106,138,0.03);
+        transform: translateY(-1px);
+      }
+
+      /* Anchor used as button (utility) */
+      a.link-button, .link-button {
+        display: inline-block;
+        padding: .5rem .9rem;
+        border-radius: 10px;
+        background: linear-gradient(180deg,#f0f6f9,#e6f0f4);
+        color: var(--gm-primary-2);
+        border: 1px solid rgba(14,106,138,0.08);
+        text-decoration: none;
+        transition: transform .12s ease, box-shadow .12s ease;
+      }
+      a.link-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(14,106,138,0.06);
+      }
+
+      /* Asegurar puntero y consistencia en anchors con clase btn aunque falte .btn */
+      a[class*="btn"], a.btn {
+        cursor: pointer;
+      }
+
+      /* Ajustes menores para botones pequeños */
+      .btn-sm { padding: .28rem .6rem; }
     </style>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-gm mb-4">
       <div class="container">
-        <!-- left: optional small home link or empty -->
         <a class="navbar-brand d-flex align-items-center" href="{% url 'catalogo:index' %}" aria-label="Inicio">
-          <!-- left brand is intentionally minimal (no text) -->
+          <!-- marca minimal -->
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,21 +183,53 @@
         </button>
 
         <div class="collapse navbar-collapse" id="nav">
-          <ul class="navbar-nav ms-auto align-items-center">
+          <!-- LEFT: Catálogo / Acerca / Citas / Productos / Servicios -->
+          <ul class="navbar-nav me-auto align-items-center">
             <li class="nav-item"><a class="nav-link" href="{% url 'catalogo:index' %}">Catálogo</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'catalogo:about' %}">Acerca</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'citas:list' %}">Citas</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Admin</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'productos:list' %}">Productos</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'servicios:list' %}">Servicios</a></li>
           </ul>
 
-          <!-- Auth links: muestra Register/Login o Perfil/Logout según sesión -->
-          <ul class="navbar-nav ms-3 align-items-center">
+          <!-- RIGHT: Admin dropdown, Auth links y logo -->
+          <ul class="navbar-nav ms-auto align-items-center">
+            <!-- Admin dropdown: solo visible para staff o superuser -->
+            {% if user.is_staff or user.is_superuser %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                ADMIN
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                <li><a class="dropdown-item" href="/admin/">Admin panel (Django)</a></li>
+                <li><hr class="dropdown-divider"></li>
+
+                <li class="dropdown-header">Productos</li>
+                <li><a class="dropdown-item" href="/productos/manage/">Productos</a></li>
+                <li><a class="dropdown-item" href="/productos/categorias/">Tipo de Productos</a></li>
+                <li><hr class="dropdown-divider"></li>
+
+                <li class="dropdown-header">Servicios</li>
+                <li><a class="dropdown-item" href="/servicios/manage/">Servicios</a></li>
+                <li><a class="dropdown-item" href="/servicios/tipos/">Tipos de Servicios</a></li>
+                <li><hr class="dropdown-divider"></li>
+
+                <li class="dropdown-header">Gestión de citas</li>
+                <li><a class="dropdown-item" href="/citas/manage/">Panel Citas</a></li>
+              </ul>
+            </li>
+            {% endif %}
+
+            <!-- Auth links: muestra Register/Login o Perfil/Logout según sesión -->
             {% if user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'catalogo:profile' %}">Hola {{ user.first_name|default:user.username }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'catalogo:logout' %}">Cerrar sesión</a>
+              <form action="{% url 'catalogo:logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link nav-link p-0 m-0">Cerrar sesión</button>
+              </form>
             </li>
             {% else %}
             <li class="nav-item">
@@ -59,12 +239,14 @@
               <a class="nav-link" href="{% url 'catalogo:register' %}">Registrarse</a>
             </li>
             {% endif %}
-          </ul>
 
-          <!-- logo a la derecha (solo imagen, sin texto). visible en pantallas grandes -->
-          <a class="d-none d-lg-block ms-3" href="{% url 'catalogo:index' %}" aria-label="{{ empresa.nombre }}">
-            <img src="{% static 'img/logogm.png' %}" alt="{{ empresa.nombre }} logo" title="{{ empresa.nombre }}" loading="lazy" class="brand-logo">
-          </a>
+            <!-- logo a la derecha (solo imagen, sin texto). visible en pantallas grandes -->
+            <li class="nav-item d-none d-lg-block ms-3">
+              <a class="nav-link p-0" href="{% url 'catalogo:index' %}" aria-label="{{ empresa.nombre }}">
+                <img src="{% static 'img/logogm.png' %}" alt="{{ empresa.nombre }} logo" title="{{ empresa.nombre }}" loading="lazy" class="brand-logo">
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
@@ -112,7 +294,6 @@
       }
       const csrftoken = getCookie('csrftoken');
 
-      // Show Django messages using SweetAlert2
       (function(){
         const messages = [
           {% for msg in messages %}

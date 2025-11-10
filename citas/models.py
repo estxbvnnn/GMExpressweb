@@ -25,6 +25,9 @@ class Appointment(models.Model):
 
     class Meta:
         ordering = ["scheduled_at"]
+        # Mostrar nombres en español en el admin
+        verbose_name = "cita"
+        verbose_name_plural = "citas"
         # unique_together = ("user", "scheduled_at")  # removed to allow overlapping control in clean()
 
     # Cambiado a property para facilitar el uso en templates
