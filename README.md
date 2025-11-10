@@ -10,8 +10,7 @@ Instalación rápida
 - python manage.py runserver
 
 Credenciales de prueba
-- prueba@example.com / Prueba123$
-- gcawsesteban@gmail.com / tebyowor123
+- admin / admin1
 
 Reglas de negocio implementadas (citas)
 - No se puede agendar una cita en el pasado (validación en modelo y formulario).
