@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card p-4 text-center">
+      <h4>Confirmar eliminación</h4>
+      <p>¿Eliminar la cita "<strong>{{ appointment.subject }}</strong>" programada para <strong>{{ appointment.scheduled_at|date:"d M Y H:i" }}</strong>?</p>
+      <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Eliminar</button>
+        <a class="btn btn-secondary ms-2" href="{% url 'citas:list' %}">Cancelar</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

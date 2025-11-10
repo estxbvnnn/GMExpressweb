@@ -60,9 +60,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'gmexpress',
-        'USER': 'user_gm',
-        'PASSWORD': 'gmexpress',
-        'HOST': 'localhost',
+        'USER': 'gm_admin',
+        'PASSWORD': 'Ventana$123',
+        'HOST': '52.54.52.32',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",

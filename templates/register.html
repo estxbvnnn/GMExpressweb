@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <div class="text-center mb-3">
+          <img src="{% static 'img/logogm.png' %}" alt="{{ empresa.nombre }}" class="brand-logo mb-2" style="height:56px;">
+          <h4 class="mb-0">Crear cuenta</h4>
+          <p class="text-muted small">Regístrate para gestionar pedidos y agendar citas</p>
+        </div>
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Nombre</label>
+              {{ form.first_name }}
+              {{ form.first_name.errors }}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Apellido</label>
+              {{ form.last_name }}
+              {{ form.last_name.errors }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Correo</label>
+            {{ form.email }}
+            {{ form.email.errors }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            {{ form.password1 }}
+            <div class="form-text">Mínimo 8 caracteres, al menos una mayúscula y un carácter especial.</div>
+            {{ form.password1.errors }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Confirmar contraseña</label>
+            {{ form.password2 }}
+            {{ form.password2.errors }}
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" type="submit">Registrar</button>
+          </div>
+        </form>
+
+        <hr>
+        <p class="small text-center text-muted mb-0">¿Ya tienes cuenta? <a href="{% url 'catalogo:login' %}">Inicia sesión</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

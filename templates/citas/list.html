@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Mis citas</h2>
+  <a class="btn btn-primary" href="{% url 'citas:create' %}">Agendar nueva</a>
+</div>
+
+<div class="row g-3">
+  {% for ap in appointments %}
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body d-flex gap-3">
+        <!-- caja fecha -->
+        <div class="text-center" style="width:110px;">
+          <div class="bg-primary text-white rounded-3 py-2 px-2">
+            <div style="font-size:1.25rem; font-weight:700;">{{ ap.scheduled_at|date:"d" }}</div>
+            <div style="text-transform:uppercase; font-size:0.85rem;">{{ ap.scheduled_at|date:"M" }}</div>
+          </div>
+          <div class="mt-2 small text-muted">{{ ap.scheduled_at|date:"Y" }}</div>
+        </div>
+
+        <!-- contenido -->
+        <div class="flex-fill">
+          <div class="d-flex justify-content-between">
+            <h5 class="card-title mb-1">{{ ap.subject }}</h5>
+            <div class="text-end small text-muted">
+              {{ ap.scheduled_at|date:"D, d M Y" }}<br>
+              {{ ap.scheduled_at|date:"H:i" }} - {{ ap.end_time|date:"H:i" }}
+            </div>
+          </div>
+
+          <p class="mb-2 text-truncate">{{ ap.notes }}</p>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              {% if ap.status == "confirmed" %}
+                <span class="badge bg-success">Confirmada</span>
+              {% elif ap.status == "cancelled" %}
+                <span class="badge bg-danger">Cancelada</span>
+              {% elif ap.scheduled_at < now %}
+                <span class="badge bg-secondary">Pasada</span>
+              {% else %}
+                <span class="badge bg-info text-dark">Programada</span>
+              {% endif %}
+            </div>
+
+            <div>
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'citas:detail' ap.pk %}">Ver</a>
+              <a class="btn btn-sm btn-secondary" href="{% url 'citas:update' ap.pk %}">Editar</a>
+              <a href="#" class="btn btn-sm btn-danger swal-delete" data-delete-url="{% url 'citas:delete' ap.pk %}">Eliminar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="card p-4 text-center">
+      <p class="mb-0">No tienes citas agendadas. <a href="{% url 'citas:create' %}">Agendar una ahora</a>.</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

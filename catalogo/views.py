@@ -1,5 +1,14 @@
-from django.shortcuts import render, Http404
+from django.shortcuts import render, Http404, redirect
 from .models import CATALOGOS
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from .forms import RegisterForm
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
+from citas.models import Appointment
+from django.utils import timezone
+from django.contrib import messages
 
 def index(request):
     contexto = {"categorias": CATALOGOS, "empresa": empresa_info()}
@@ -19,7 +28,6 @@ def producto(request, cat_slug, prod_slug):
     producto = next((p for p in categoria["productos"] if p["slug"] == prod_slug), None)
     if not producto:
         raise Http404("Producto no encontrado")
-    # Fallback: asegurar la ruta de la imagen para almuerzo-tradicional si no estuviera presente
     if producto.get("slug") == "almuerzo-tradicional" and not producto.get("imagen"):
         producto["imagen"] = "templates/almuerzotradicional.png"
     contexto = {"categoria": categoria, "producto": producto, "empresa": empresa_info()}
@@ -28,6 +36,81 @@ def producto(request, cat_slug, prod_slug):
 def about(request):
     contexto = {"empresa": empresa_info()}
     return render(request, "about.html", contexto)
+
+# --- Nuevas vistas de autenticación ---
+
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            # crear usuario
+            user = User.objects.create_user(
+                username=data["email"],
+                email=data["email"],
+                password=data["password1"],
+                first_name=data["first_name"],
+                last_name=data["last_name"],
+            )
+            user.is_active = True
+            user.save()
+
+            # Enviar correo de bienvenida (si falla no impide el registro)
+            try:
+                subject = "Bienvenido a GM Express"
+                message = (
+                    f"Hola {user.first_name},\n\n"
+                    "Gracias por registrarte en GM Express.\n\n"
+                    "Puedes iniciar sesión en: http://127.0.0.1:8000/login/\n\n"
+                    "Saludos,\nGM Express"
+                )
+                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+            except Exception:
+                pass
+
+            messages.success(request, "Cuenta creada correctamente. Bienvenido/a.")
+
+            # Iniciar sesión automático tras registro
+            user = authenticate(request, username=data["email"], password=data["password1"])
+            if user:
+                login(request, user)
+                return redirect("catalogo:profile")
+            return redirect("catalogo:login")
+        else:
+            # mostrar mensaje de error general para que SweetAlert lo muestre
+            errors = form.errors.as_json()
+            messages.error(request, "Corrige los errores del formulario antes de continuar.")
+    else:
+        form = RegisterForm()
+    return render(request, "register.html", {"form": form, "empresa": empresa_info()})
+
+def login_view(request):
+    error = None
+    if request.method == "POST":
+        email = request.POST.get("email", "").strip()
+        password = request.POST.get("password", "")
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("catalogo:profile")
+        error = "Correo o contraseña incorrectos."
+    return render(request, "login.html", {"error": error, "empresa": empresa_info()})
+
+def logout_view(request):
+    logout(request)
+    return redirect("catalogo:index")
+
+@login_required
+def profile(request):
+    # obtener próximas 5 citas del usuario
+    upcoming_qs = Appointment.objects.filter(user=request.user, scheduled_at__gt=timezone.now()).order_by("scheduled_at")[:5]
+    contexto = {
+        "usuario": request.user,
+        "empresa": empresa_info(),
+        "upcoming": upcoming_qs,
+        "upcoming_count": upcoming_qs.count(),
+    }
+    return render(request, "profile.html", contexto)
 
 def empresa_info():
     return {
