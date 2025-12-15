@@ -9,6 +9,7 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("1", "true", "yes")
 ALLOWED_HOSTS = [
     "44.223.64.41",  # host anterior
     "18.231.114.72",  # host DB/balanceador
+    "18.230.113.38",
     "127.0.0.1",
     "localhost",
 ]
