@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
 import json
 import re
 from .models import Producto, CategoriaProducto, Compra, CompraItem
@@ -139,15 +139,18 @@ def _requested_qty(request, product_id):
     pid = str(product_id)
     base_names = ("cantidad", "cantidades", "qty", "quantity", "stock", "amount", "cant")
     skip_exact = {"csrfmiddlewaretoken", "producto", "producto_id", "product", "product_id", "pk", "id", "action", "submit"}
-    direct_keys = []
+    primary_keys = []
     for base in base_names:
-        direct_keys.extend([
+        primary_keys.extend([
             base,
             f"{base}_{pid}",
             f"{base}-{pid}",
+            f"{base}{pid}",
             f"{pid}_{base}",
             f"{pid}-{base}",
+            f"{pid}{base}",
             f"{base}[{pid}]",
+            f"{pid}[{base}]",
         ])
     list_keys = [f"{base}[]" for base in base_names]
 
@@ -210,23 +213,33 @@ def _requested_qty(request, product_id):
         value = int(number)
         return value if value > 0 else 0
 
+    def _fetch(keys):
+        for source in sources:
+            for key in keys:
+                value = _as_int(_extract(source, key))
+                if value:
+                    return value
+        return 0
+
+    direct_val = _fetch(primary_keys)
+    if direct_val:
+        return direct_val
+
+    list_val = _fetch(list_keys)
+    if list_val:
+        return list_val
+
     for source in sources:
-        for key in direct_keys:
-            value = _as_int(_extract(source, key))
-            if value:
-                return value
-        for key in list_keys:
-            value = _as_int(_extract(source, key))
-            if value:
-                return value
         for key, raw in _iter_items(source):
             lowered = str(key).lower()
             if lowered in skip_exact:
                 continue
-            if any(base in lowered for base in base_names):
+            if any(base in lowered for base in base_names) or pid in lowered:
                 value = _as_int(raw)
                 if value:
                     return value
+
+    for source in sources:
         for key, raw in _iter_items(source):
             lowered = str(key).lower()
             if lowered in skip_exact or "id" in lowered:

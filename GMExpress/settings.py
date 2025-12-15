@@ -91,9 +91,9 @@ TIME_ZONE = 'America/Santiago'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = Path(os.environ.get("STATIC_ROOT", BASE_DIR / "staticfiles"))
+STATIC_URL = '/static/'  # URL base para archivos estáticos
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directorio donde se almacenan los archivos estáticos recolectados
+
 
 USE_HTTPS = os.environ.get("USE_HTTPS", "False").lower() in ("1", "true", "yes")
 if USE_HTTPS:
