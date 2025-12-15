@@ -134,6 +134,25 @@ def _cart_qty(cart, prod_id):
         return 0
 
 @login_required
+def cart_add(request, pk):
+    if request.method != "POST":
+        return redirect("productos:list")
+    qty_raw = request.POST.get("cantidad") or request.POST.get("qty")
+    try:
+        qty = int(qty_raw)
+    except (TypeError, ValueError):
+        qty = 0
+    if qty <= 0:
+        messages.error(request, "Cantidad inválida.")
+        return redirect("productos:list")
+    product = get_object_or_404(Producto, pk=pk)
+    cart = _get_cart(request)
+    cart[str(product.pk)] = _cart_qty(cart, product.pk) + qty
+    request.session.modified = True
+    messages.success(request, f"{qty} × {product.nombre} añadidos al carrito.")
+    return redirect("productos:cart")
+
+@login_required
 def cart_view(request):
     cart = _get_cart(request)
     ids = [int(pk) for pk in cart.keys() if _cart_qty(cart, pk) > 0]
