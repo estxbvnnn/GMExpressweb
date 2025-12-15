@@ -133,21 +133,47 @@ def _cart_qty(cart, prod_id):
     except (TypeError, ValueError):
         return 0
 
+def _requested_qty(request, product_id):
+    candidates = [
+        "cantidad", "qty", "quantity",
+        f"cantidad_{product_id}", f"qty_{product_id}", f"quantity_{product_id}",
+    ]
+    for key in candidates:
+        raw = request.POST.get(key)
+        if raw not in (None, ""):
+            try:
+                return int(raw)
+            except (TypeError, ValueError):
+                return 0
+    for key in ("cantidad[]", "qty[]", "quantity[]"):
+        values = request.POST.getlist(key)
+        for raw in reversed(values):
+            if raw not in (None, ""):
+                try:
+                    return int(raw)
+                except (TypeError, ValueError):
+                    return 0
+    return 1
+
 @login_required
 def cart_add(request, pk):
     if request.method != "POST":
         return redirect("productos:list")
-    qty_raw = request.POST.get("cantidad") or request.POST.get("qty")
-    try:
-        qty = int(qty_raw)
-    except (TypeError, ValueError):
-        qty = 0
+    qty = _requested_qty(request, pk)
     if qty <= 0:
         messages.error(request, "Cantidad inválida.")
         return redirect("productos:list")
     product = get_object_or_404(Producto, pk=pk)
     cart = _get_cart(request)
-    cart[str(product.pk)] = _cart_qty(cart, product.pk) + qty
+    current_qty = _cart_qty(cart, product.pk)
+    remaining = product.stock - current_qty
+    if remaining <= 0:
+        messages.error(request, f"{product.nombre} no tiene stock disponible.")
+        return redirect("productos:cart")
+    if qty > remaining:
+        qty = remaining
+        messages.warning(request, f"Se ajustó la cantidad de {product.nombre} al stock disponible ({qty} unidades).")
+    cart[str(product.pk)] = current_qty + qty
     request.session.modified = True
     messages.success(request, f"{qty} × {product.nombre} añadidos al carrito.")
     return redirect("productos:cart")

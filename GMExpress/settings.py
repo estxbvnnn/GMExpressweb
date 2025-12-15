@@ -10,6 +10,7 @@ ALLOWED_HOSTS = [
     "44.223.64.41",  # host anterior
     "18.231.114.72",  # host DB/balanceador
     "18.230.113.38",
+    "56.125.146.83",
     "127.0.0.1",
     "localhost",
 ]
