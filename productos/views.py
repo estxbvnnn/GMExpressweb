@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Producto, CategoriaProducto
+from django.db import transaction
+from django.db.models import F
+from decimal import Decimal
+from .models import Producto, CategoriaProducto, Compra, CompraItem
 from .forms import ProductoForm, CategoriaProductoForm
 from django.contrib import messages
 
@@ -107,3 +110,89 @@ def categoria_delete(request, pk):
         return redirect("productos:categoria_list")
     # Reusar plantilla de confirmación simple
     return render(request, "productos/categoria_form.html", {"confirm_delete": True, "obj": c, "action": "Eliminar categoría"})
+
+def _get_cart(request):
+    cart = request.session.get("cart", {})
+    request.session["cart"] = cart
+    return cart
+
+@login_required
+def cart_add(request, pk):
+    if request.method != "POST":
+        return redirect("productos:list")
+    qty = request.POST.get("cantidad") or request.POST.get("qty")
+    try:
+        qty = int(qty)
+    except (TypeError, ValueError):
+        qty = 0
+    if qty <= 0:
+        messages.error(request, "Cantidad inválida.")
+        return redirect("productos:list")
+    product = get_object_or_404(Producto, pk=pk)
+    cart = _get_cart(request)
+    cart[str(pk)] = cart.get(str(pk), 0) + qty
+    request.session.modified = True
+    messages.success(request, f"{product.nombre} añadido al carrito.")
+    return redirect("productos:list")
+
+@login_required
+def cart_view(request):
+    cart = _get_cart(request)
+    ids = [int(k) for k in cart.keys()]
+    productos = Producto.objects.filter(id__in=ids)
+    items = []
+    total = Decimal("0.00")
+    for prod in productos:
+        qty = cart.get(str(prod.id), 0)
+        subtotal = prod.precio * qty
+        total += subtotal
+        items.append({"prod": prod, "qty": qty, "subtotal": subtotal})
+    return render(request, "productos/cart.html", {"items": items, "total": total})
+
+@login_required
+def cart_checkout(request):
+    if request.method != "POST":
+        return redirect("productos:cart")
+    cart = _get_cart(request)
+    if not cart:
+        messages.error(request, "El carrito está vacío.")
+        return redirect("productos:cart")
+    ids = [int(k) for k in cart.keys()]
+    with transaction.atomic():
+        productos = Producto.objects.select_for_update().filter(id__in=ids)
+        if productos.count() != len(ids):
+            messages.error(request, "Algún producto ya no existe.")
+            return redirect("productos:cart")
+        for prod in productos:
+            qty = cart[str(prod.id)]
+            if qty <= 0 or qty > prod.stock:
+                messages.error(request, f"Stock insuficiente para {prod.nombre}.")
+                return redirect("productos:cart")
+        compra = Compra.objects.create(usuario=request.user, total=Decimal("0.00"))
+        total = Decimal("0.00")
+        for prod in productos:
+            qty = cart[str(prod.id)]
+            prod.stock = F("stock") - qty
+            prod.save(update_fields=["stock"])
+            CompraItem.objects.create(
+                compra=compra,
+                producto=prod,
+                cantidad=qty,
+                precio_unitario=prod.precio,
+            )
+            total += prod.precio * qty
+        compra.total = total
+        compra.save(update_fields=["total"])
+    request.session["cart"] = {}
+    request.session.modified = True
+    messages.success(request, f"Compra realizada. Total ${total}.")
+    return redirect("productos:history")
+
+@login_required
+def purchase_history(request):
+    compras = (
+        Compra.objects.filter(usuario=request.user)
+        .prefetch_related("items__producto")
+        .order_by("-creada_en")
+    )
+    return render(request, "productos/history.html", {"compras": compras})

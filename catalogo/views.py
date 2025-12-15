@@ -2,7 +2,7 @@ from django.shortcuts import render, Http404, redirect
 from django.urls import reverse
 from .models import CATALOGOS
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import RegisterForm
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -10,6 +10,8 @@ from django.conf import settings
 from citas.models import Appointment
 from django.utils import timezone
 from django.contrib import messages
+from io import StringIO
+from django.core.management import call_command
 
 def index(request):
     contexto = {"categorias": CATALOGOS, "empresa": empresa_info()}
@@ -114,6 +116,16 @@ def profile(request):
         "upcoming_count": upcoming_qs.count(),
     }
     return render(request, "profile.html", contexto)
+
+@user_passes_test(lambda u: u.is_active and (u.is_staff or u.is_superuser))
+def import_catalog_to_db(request):
+    buf = StringIO()
+    try:
+        call_command("import_catalog", stdout=buf)
+        messages.success(request, f"Catálogo importado. Resultado:\n{buf.getvalue()}")
+    except Exception as e:
+        messages.error(request, f"Error al importar catálogo: {e}")
+    return redirect("catalogo:index")
 
 def empresa_info():
     return {

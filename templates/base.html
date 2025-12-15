@@ -194,6 +194,10 @@
 
           <!-- RIGHT: Admin dropdown, Auth links y logo -->
           <ul class="navbar-nav ms-auto align-items-center">
+            {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'productos:cart' %}">Carrito</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'productos:history' %}">Historial</a></li>
+            {% endif %}
             <!-- Admin dropdown: solo visible para staff o superuser -->
             {% if user.is_staff or user.is_superuser %}
             <li class="nav-item dropdown">
@@ -216,6 +220,10 @@
 
                 <li class="dropdown-header">Gestión de citas</li>
                 <li><a class="dropdown-item" href="/citas/manage/">Panel Citas</a></li>
+                <li><hr class="dropdown-divider"></li>
+
+                <li class="dropdown-header">Operaciones</li>
+                <li><a class="dropdown-item" href="{% url 'catalogo:import_catalog' %}">Importar catálogo a DB</a></li>
               </ul>
             </li>
             {% endif %}

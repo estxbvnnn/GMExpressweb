@@ -18,16 +18,29 @@
       <div class="card-body">
         <h3>{{ producto.nombre }}</h3>
         <p class="mb-2 text-muted">Precio: <strong>${{ producto.precio }}</strong></p>
-        <p class="mb-2 text-muted">Stock: <strong>{{ producto.stock }}</strong> — Unidad: <strong>{{ producto.get_unidad_medida_display }}</strong></p>
+        <p class="mb-2 text-muted">Stock: <strong class="stock-label">{{ producto.stock }}</strong> — Unidad: <strong>{{ producto.get_unidad_medida_display }}</strong></p>
         <hr>
         <p>{{ producto.descripcion|linebreaks }}</p>
 
+        {% if producto.stock > 0 %}
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <label class="form-label mb-0">Cantidad</label>
+          <input type="number" class="form-control form-control-sm qty-input" data-product-id="{{ producto.pk }}" min="1" max="{{ producto.stock }}" value="1" style="max-width:100px;">
+          <button class="btn btn-success btn-sm comprar-btn" data-product-id="{{ producto.pk }}" data-url="/api/productos/{{ producto.pk }}/comprar/">Comprar</button>
+          <form method="post" action="{% url 'productos:add_to_cart' producto.pk %}" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="cantidad" value="1" class="hidden-qty" data-product-id="{{ producto.pk }}">
+            <button class="btn btn-outline-primary btn-sm" type="submit">Agregar al carrito</button>
+          </form>
+        </div>
+        {% else %}
+        <p class="text-danger">Sin stock disponible.</p>
+        {% endif %}
+
         <div class="mt-3 d-flex gap-2">
           <a class="btn btn-outline-primary" href="{% url 'productos:list' %}">Volver a productos</a>
-
           {% if user.is_staff %}
             <a class="btn btn-secondary" href="{% url 'productos:update' producto.pk %}">Editar</a>
-
             <form method="post" action="{% url 'productos:delete' producto.pk %}" class="d-inline">
               {% csrf_token %}
               <button class="btn btn-danger" type="submit">Eliminar</button>
@@ -38,4 +51,56 @@
     </div>
   </div>
 </div>
+
+<script>
+(function(){
+  const getCSRF = typeof getCookie === 'function'
+    ? getCookie
+    : (name) => {
+        const m = document.cookie.match(new RegExp('(^|;)\\s*' + name + '=([^;]+)'));
+        return m ? decodeURIComponent(m[2]) : null;
+      };
+
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('.comprar-btn');
+    if(!btn) return;
+    const input = document.querySelector('.qty-input[data-product-id="' + btn.dataset.productId + '"]');
+    const cantidad = input ? parseInt(input.value, 10) : 1;
+    if(!cantidad || cantidad <= 0){
+      Swal.fire({icon:'error', title:'Cantidad inválida', text:'Ingresa una cantidad mayor a 0.'});
+      return;
+    }
+
+    fetch(btn.dataset.url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCSRF('csrftoken'),
+      },
+      body: JSON.stringify({ cantidad }),
+    })
+    .then(async r => {
+      const data = await r.json().catch(() => ({}));
+      if(!r.ok) throw new Error(data.detail || 'No se pudo completar la compra.');
+      return data;
+    })
+    .then(data => {
+      Swal.fire({icon:'success', title: data.detail || 'Compra realizada', text: 'Stock restante: ' + data.stock_restante});
+      const stockLabel = document.querySelector('.stock-label');
+      if(stockLabel) stockLabel.textContent = data.stock_restante;
+      if(input){
+        input.max = data.stock_restante;
+        if(data.stock_restante <= 0){
+          input.value = 0;
+          btn.disabled = true;
+          btn.classList.add('disabled');
+        } else if(parseInt(input.value,10) > data.stock_restante){
+          input.value = data.stock_restante;
+        }
+      }
+    })
+    .catch(err => Swal.fire({icon:'error', title:'Error', text: err.message}));
+  });
+})();
+</script>
 {% endblock %}

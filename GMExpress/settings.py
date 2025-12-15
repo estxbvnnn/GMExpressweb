@@ -1,11 +1,17 @@
 import os
 from pathlib import Path
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-4&!$@!#^@!%&*^@!%&*^@!%&*^@!%&*^@!%&*^@!%&*^@!%'
-DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() in ("1", "true", "yes")
-ALLOWED_HOSTS = ["44.223.64.41"]
+DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("1", "true", "yes")
+ALLOWED_HOSTS = [
+    "44.223.64.41",  # host anterior
+    "18.231.114.72",  # host DB/balanceador
+    "127.0.0.1",
+    "localhost",
+]
 
 LOGIN_REDIRECT_URL = "/perfil/"
 LOGIN_URL = "/login/"
@@ -17,6 +23,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'api.apps.ApiConfig',
     'catalogo.apps.CatalogoConfig',
     'servicios.apps.ServiciosConfig',
     'productos.apps.ProductosConfig',
@@ -57,9 +66,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'gmexpress',
-        'USER': 'gm_admin',
-        'PASSWORD': 'Ventana$123',
-        'HOST': '52.54.52.32',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
+        'HOST': '18.231.114.72',
         'PORT': '3306',
         'OPTIONS': {
             'connect_timeout': 5,
@@ -105,6 +114,34 @@ LOGGING = {
         "django.db.backends": {"handlers": ["console"], "level": "DEBUG", "propagate": False},
         "django.request": {"handlers": ["console"], "level": LOG_LEVEL, "propagate": False},
     },
+}
+
+# Django REST Framework
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ),
+    "DEFAULT_PARSER_CLASSES": (
+        "rest_framework.parsers.JSONParser",
+        "rest_framework.parsers.FormParser",
+        "rest_framework.parsers.MultiPartParser",
+    ),
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ),
+}
+
+# Simple JWT
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

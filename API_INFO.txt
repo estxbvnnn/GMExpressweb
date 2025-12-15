@@ -1,0 +1,44 @@
+GM Express API - Entrega
+========================
+
+URLs públicas (ajusta host según despliegue)
+- Base local: http://127.0.0.1:8000/
+- Base API: http://127.0.0.1:8000/api/
+- Token JWT: http://127.0.0.1:8000/api/token/
+- Refresh JWT: http://127.0.0.1:8000/api/token/refresh/
+
+Endpoints habilitados (REST JSON)
+- GET/POST: /api/categorias/
+- GET/PUT/PATCH/DELETE: /api/categorias/<id>/
+- GET/POST: /api/productos/
+- GET/PUT/PATCH/DELETE: /api/productos/<id>/
+- GET/POST: /api/tipos-servicio/
+- GET/PUT/PATCH/DELETE: /api/tipos-servicio/<id>/
+- GET/POST: /api/servicios/
+- GET/PUT/PATCH/DELETE: /api/servicios/<id>/
+- GET/POST: /api/citas/
+- GET/PUT/PATCH/DELETE: /api/citas/<id>/
+
+Credenciales de prueba por perfil
+- Admin (todos los permisos): usuario=admin, password=admin1
+- Cliente demo (crea y gestiona sus citas y lee catálogos): usuario=prueba@example.com, password=Prueba123$
+- Staff (empresa, puede crear/editar catálogos y ver todas las citas): crea un usuario staff desde admin o usa superusuario.
+
+Notas de roles
+- Lectura (GET) de catálogos y servicios: pública.
+- Crear/editar/eliminar productos, categorías, tipos y servicios: solo staff o superusuario.
+- Citas: autenticación obligatoria. Clientes solo ven/modifican las suyas; staff/superuser pueden ver todas.
+
+Cómo pedir tokens JWT
+1) POST /api/token/ con JSON {"username":"admin","password":"admin1"}
+2) Guardar "access" y "refresh" del resultado.
+3) Usar el access en Authorization: Bearer <token> para todas las peticiones.
+4) Cuando expire, POST /api/token/refresh/ con {"refresh":"<refresh-token>"}.
+
+Despliegue sugerido (resumen)
+- Instalar dependencias: pip install -r requirements.txt
+- Migraciones: python manage.py migrate
+- Crear superusuario: python manage.py createsuperuser
+- Ejecutar: python manage.py runserver 0.0.0.0:8000
+- Importar catálogo base (categorías/productos/servicios): python manage.py import_catalog
+- En producción: configurar variables de entorno y base de datos, servir estáticos, y exponer el puerto 8000/80.

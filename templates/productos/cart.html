@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Carrito</h2>
+  {% if items %}
+    <form method="post" action="{% url 'productos:cart_checkout' %}">
+      {% csrf_token %}
+      <button class="btn btn-success">Pagar y comprar</button>
+    </form>
+  {% endif %}
+</div>
+
+{% if items %}
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr><th>Producto</th><th>Categoría</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{ item.prod.nombre }}</td>
+            <td class="text-muted">{{ item.prod.categoria.nombre }}</td>
+            <td>{{ item.qty }}</td>
+            <td>${{ item.prod.precio }}</td>
+            <td><strong>${{ item.subtotal }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="text-end">
+      <h5>Total: ${{ total }}</h5>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-info">Tu carrito está vacío.</div>
+{% endif %}
+{% endblock %}
