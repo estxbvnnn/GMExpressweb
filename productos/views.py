@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
 from decimal import Decimal, ROUND_HALF_UP
+import json
+import re
 from .models import Producto, CategoriaProducto, Compra, CompraItem
 from .forms import ProductoForm, CategoriaProductoForm
 from django.contrib import messages
@@ -135,8 +137,8 @@ def _cart_qty(cart, prod_id):
 
 def _requested_qty(request, product_id):
     pid = str(product_id)
-    base_names = ("cantidad", "qty", "quantity", "stock", "amount", "cant")
-    skip_exact = {"csrfmiddlewaretoken", "producto", "producto_id", "product", "product_id", "pk", "id"}
+    base_names = ("cantidad", "cantidades", "qty", "quantity", "stock", "amount", "cant")
+    skip_exact = {"csrfmiddlewaretoken", "producto", "producto_id", "product", "product_id", "pk", "id", "action", "submit"}
     direct_keys = []
     for base in base_names:
         direct_keys.extend([
@@ -149,36 +151,84 @@ def _requested_qty(request, product_id):
         ])
     list_keys = [f"{base}[]" for base in base_names]
 
-    def _as_int(raw):
+    sources = []
+    if request.POST:
+        sources.append(request.POST)
+    if request.GET:
+        sources.append(request.GET)
+
+    json_payload = {}
+    content_type = (request.META.get("CONTENT_TYPE") or "").lower()
+    if "json" in content_type:
         try:
-            value = int(str(raw).strip())
-        except (TypeError, ValueError):
+            payload = json.loads(request.body.decode(request.encoding or "utf-8"))
+            if isinstance(payload, dict):
+                json_payload = payload
+        except (ValueError, json.JSONDecodeError, UnicodeDecodeError):
+            json_payload = {}
+    if json_payload:
+        sources.append(json_payload)
+
+    def _extract(source, key):
+        if hasattr(source, "getlist"):
+            values = source.getlist(key)
+            if values:
+                return values[-1]
+        if hasattr(source, "get"):
+            value = source.get(key)
+        else:
+            value = source[key] if isinstance(source, dict) and key in source else None
+        if isinstance(value, list) and value:
+            return value[-1]
+        return value
+
+    def _iter_items(source):
+        if hasattr(source, "lists"):
+            for key, values in source.lists():
+                if values:
+                    yield key, values[-1]
+        elif hasattr(source, "items"):
+            for key, value in source.items():
+                yield key, value
+
+    def _as_int(raw):
+        if raw in (None, "", [], ()):
             return 0
+        if isinstance(raw, (list, tuple)):
+            raw = raw[-1]
+        text = str(raw).strip()
+        if not text:
+            return 0
+        text = text.replace(",", ".")
+        match = re.search(r"\d+(?:\.\d+)?", text)
+        if not match:
+            return 0
+        try:
+            number = Decimal(match.group(0))
+        except InvalidOperation:
+            return 0
+        value = int(number)
         return value if value > 0 else 0
 
-    for data in (request.POST, request.GET):
-        if not data:
-            continue
+    for source in sources:
         for key in direct_keys:
-            value = _as_int(data.get(key))
+            value = _as_int(_extract(source, key))
             if value:
                 return value
         for key in list_keys:
-            values = data.getlist(key)
-            for raw in reversed(values):
-                value = _as_int(raw)
-                if value:
-                    return value
-        for key, raw in data.items():
-            lowered = key.lower()
+            value = _as_int(_extract(source, key))
+            if value:
+                return value
+        for key, raw in _iter_items(source):
+            lowered = str(key).lower()
             if lowered in skip_exact:
                 continue
             if any(base in lowered for base in base_names):
                 value = _as_int(raw)
                 if value:
                     return value
-        for key, raw in data.items():
-            lowered = key.lower()
+        for key, raw in _iter_items(source):
+            lowered = str(key).lower()
             if lowered in skip_exact or "id" in lowered:
                 continue
             value = _as_int(raw)
