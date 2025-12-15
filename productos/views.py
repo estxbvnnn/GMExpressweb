@@ -135,7 +135,8 @@ def _cart_qty(cart, prod_id):
 
 def _requested_qty(request, product_id):
     pid = str(product_id)
-    base_names = ("cantidad", "qty", "quantity", "stock")
+    base_names = ("cantidad", "qty", "quantity", "stock", "amount", "cant")
+    skip_exact = {"csrfmiddlewaretoken", "producto", "producto_id", "product", "product_id", "pk", "id"}
     direct_keys = []
     for base in base_names:
         direct_keys.extend([
@@ -146,31 +147,43 @@ def _requested_qty(request, product_id):
             f"{pid}-{base}",
             f"{base}[{pid}]",
         ])
-    list_keys = tuple(f"{base}[]" for base in base_names)
+    list_keys = [f"{base}[]" for base in base_names]
 
-    for key in direct_keys:
-        raw = request.POST.get(key)
-        if raw not in (None, ""):
-            try:
-                return int(raw)
-            except (TypeError, ValueError):
-                return 0
+    def _as_int(raw):
+        try:
+            value = int(str(raw).strip())
+        except (TypeError, ValueError):
+            return 0
+        return value if value > 0 else 0
 
-    for key in list_keys:
-        values = request.POST.getlist(key)
-        for raw in reversed(values):
-            if raw not in (None, ""):
-                try:
-                    return int(raw)
-                except (TypeError, ValueError):
-                    return 0
-
-    for key, raw in request.POST.items():
-        if any(base in key for base in base_names) and raw not in (None, ""):
-            try:
-                return int(raw)
-            except (TypeError, ValueError):
+    for data in (request.POST, request.GET):
+        if not data:
+            continue
+        for key in direct_keys:
+            value = _as_int(data.get(key))
+            if value:
+                return value
+        for key in list_keys:
+            values = data.getlist(key)
+            for raw in reversed(values):
+                value = _as_int(raw)
+                if value:
+                    return value
+        for key, raw in data.items():
+            lowered = key.lower()
+            if lowered in skip_exact:
                 continue
+            if any(base in lowered for base in base_names):
+                value = _as_int(raw)
+                if value:
+                    return value
+        for key, raw in data.items():
+            lowered = key.lower()
+            if lowered in skip_exact or "id" in lowered:
+                continue
+            value = _as_int(raw)
+            if value:
+                return value
     return 1
 
 @login_required
@@ -194,6 +207,19 @@ def cart_add(request, pk):
     cart[str(product.pk)] = current_qty + qty
     request.session.modified = True
     messages.success(request, f"{qty} × {product.nombre} añadidos al carrito.")
+    return redirect("productos:cart")
+
+@login_required
+def cart_remove(request, pk):
+    if request.method != "POST":
+        return redirect("productos:cart")
+    cart = _get_cart(request)
+    removed = cart.pop(str(pk), None)
+    if removed:
+        request.session.modified = True
+        messages.info(request, "Producto eliminado del carrito.")
+    else:
+        messages.warning(request, "El producto ya no estaba en el carrito.")
     return redirect("productos:cart")
 
 @login_required

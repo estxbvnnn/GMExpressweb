@@ -23,6 +23,7 @@ urlpatterns = [
     # Rutas para carrito, checkout e historial
     path("carrito/", views.cart_view, name="cart"),
     path("carrito/checkout/", views.cart_checkout, name="cart_checkout"),
+    path("carrito/eliminar/<int:pk>/", views.cart_remove, name="cart_remove"),
     path("<int:pk>/add-to-cart/", views.cart_add, name="add_to_cart"),
     path("historial/", views.purchase_history, name="history"),
 ]

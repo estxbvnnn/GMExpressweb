@@ -11,34 +11,39 @@
 </div>
 
 {% if items %}
-<div class="card">
-  <div class="card-body">
+<div class="cart-wrapper">
+  <section class="cart-table">
     <div class="table-responsive">
-      <table class="table align-middle">
+      <table class="table align-middle mb-4">
         <thead>
-          <tr><th>Producto</th><th>Categoría</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr>
+          <tr>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th class="text-center">Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+            <th></th>
+          </tr>
         </thead>
         <tbody>
           {% for item in items %}
           <tr>
             <td>{{ item.prod.nombre }}</td>
             <td class="text-muted">{{ item.prod.categoria.nombre }}</td>
-            <td>{{ item.qty }}</td>
-            <td>${{ item.prod.precio }}</td>
+            <td class="text-center">{{ item.qty }}</td>
+            <td>${{ item.precio }}</td>
             <td><strong>${{ item.subtotal }}</strong></td>
+            <td class="text-end">
+              <form method="post" action="{% url 'productos:cart_remove' item.prod.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+              </form>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-    <div class="text-end">
-      <h5>Total: ${{ total }}</h5>
-    </div>
-  </div>
-</div>
-<div class="cart-wrapper">
-  <section class="cart-table">
-    <!-- ...existing table/lista de items... -->
   </section>
   <aside class="cart-summary">
     <div class="cart-summary__row">
@@ -53,7 +58,11 @@
       <span>Total del pedido</span>
       <span>${{ order_summary.total|floatformat:2 }}</span>
     </div>
-    <p class="text-muted small mb-0">{{ item_count }} artículo(s) en tu carrito.</p>
+    <p class="text-muted small mb-3">{{ item_count }} artículo(s) en tu carrito.</p>
+    <form method="post" action="{% url 'productos:cart_checkout' %}">
+      {% csrf_token %}
+      <button class="btn btn-primary w-100">Finalizar compra</button>
+    </form>
   </aside>
 </div>
 {% else %}
