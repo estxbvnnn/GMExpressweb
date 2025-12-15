@@ -36,6 +36,26 @@
     </div>
   </div>
 </div>
+<div class="cart-wrapper">
+  <section class="cart-table">
+    <!-- ...existing table/lista de items... -->
+  </section>
+  <aside class="cart-summary">
+    <div class="cart-summary__row">
+      <span>Subtotal</span>
+      <span>${{ order_summary.subtotal|floatformat:2 }}</span>
+    </div>
+    <div class="cart-summary__row">
+      <span>{{ order_summary.iva_label }}</span>
+      <span>${{ order_summary.iva|floatformat:2 }}</span>
+    </div>
+    <div class="cart-summary__row cart-summary__total">
+      <span>Total del pedido</span>
+      <span>${{ order_summary.total|floatformat:2 }}</span>
+    </div>
+    <p class="text-muted small mb-0">{{ item_count }} artículo(s) en tu carrito.</p>
+  </aside>
+</div>
 {% else %}
 <div class="alert alert-info">Tu carrito está vacío.</div>
 {% endif %}

@@ -134,18 +134,29 @@ def _cart_qty(cart, prod_id):
         return 0
 
 def _requested_qty(request, product_id):
-    candidates = [
-        "cantidad", "qty", "quantity",
-        f"cantidad_{product_id}", f"qty_{product_id}", f"quantity_{product_id}",
-    ]
-    for key in candidates:
+    pid = str(product_id)
+    base_names = ("cantidad", "qty", "quantity", "stock")
+    direct_keys = []
+    for base in base_names:
+        direct_keys.extend([
+            base,
+            f"{base}_{pid}",
+            f"{base}-{pid}",
+            f"{pid}_{base}",
+            f"{pid}-{base}",
+            f"{base}[{pid}]",
+        ])
+    list_keys = tuple(f"{base}[]" for base in base_names)
+
+    for key in direct_keys:
         raw = request.POST.get(key)
         if raw not in (None, ""):
             try:
                 return int(raw)
             except (TypeError, ValueError):
                 return 0
-    for key in ("cantidad[]", "qty[]", "quantity[]"):
+
+    for key in list_keys:
         values = request.POST.getlist(key)
         for raw in reversed(values):
             if raw not in (None, ""):
@@ -153,6 +164,13 @@ def _requested_qty(request, product_id):
                     return int(raw)
                 except (TypeError, ValueError):
                     return 0
+
+    for key, raw in request.POST.items():
+        if any(base in key for base in base_names) and raw not in (None, ""):
+            try:
+                return int(raw)
+            except (TypeError, ValueError):
+                continue
     return 1
 
 @login_required
@@ -198,6 +216,12 @@ def cart_view(request):
             "subtotal": _money(line_total),
         })
     subtotal, iva, total = _iva_breakdown(subtotal_acum)
+    order_summary = {
+        "subtotal": subtotal,
+        "iva": iva,
+        "total": total,
+        "iva_label": f"IVA ({int(IVA_RATE * 100)}%)",
+    }
     return render(request, "productos/cart.html", {
         "items": items,
         "subtotal": subtotal,
@@ -205,6 +229,7 @@ def cart_view(request):
         "total": total,
         "iva_rate": int(IVA_RATE * 100),
         "item_count": sum(item["qty"] for item in items),
+        "order_summary": order_summary,
     })
 
 @login_required
