@@ -27,12 +27,22 @@
           <label class="form-label mb-0">Cantidad</label>
           <input type="number" class="form-control form-control-sm qty-input" data-product-id="{{ producto.pk }}" min="1" max="{{ producto.stock }}" value="1" style="max-width:100px;">
           <button class="btn btn-success btn-sm comprar-btn" data-product-id="{{ producto.pk }}" data-url="/api/productos/{{ producto.pk }}/comprar/">Comprar</button>
-          <form method="post" action="{% url 'productos:add_to_cart' producto.pk %}" class="d-inline">
-            {% csrf_token %}
-            <input type="hidden" name="cantidad" value="1" class="hidden-qty" data-product-id="{{ producto.pk }}">
-            <button class="btn btn-outline-primary btn-sm" type="submit">Agregar al carrito</button>
-          </form>
         </div>
+
+        <form method="post" action="{% url 'productos:add_to_cart' producto.pk %}" class="d-flex flex-column gap-3">
+          {% csrf_token %}
+          <label class="form-label fw-semibold" for="cantidadProducto">Cantidad</label>
+          <input
+            id="cantidadProducto"
+            type="number"
+            name="cantidad"
+            min="1"
+            max="{{ producto.stock }}"
+            value="1"
+            class="form-control w-auto"
+          />
+          <button class="btn btn-primary">Agregar al carrito</button>
+        </form>
         {% else %}
         <p class="text-danger">Sin stock disponible.</p>
         {% endif %}
